@@ -33,6 +33,3 @@ Thumbs.db
 # Package files
 package-lock.json
 yarn.lock
-
-# Drizzle migrations (if applicable)
-migrations/

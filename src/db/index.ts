@@ -1,8 +1,8 @@
-import { drizzle } from 'drizzle-orm/mysql2';
-import mysql from 'mysql2/promise';
-import * as schema from './schema';
-import 'dotenv/config';
-import { sql } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/mysql2'
+import mysql from 'mysql2/promise'
+import * as schema from './schema'
+import 'dotenv/config'
+import { migrate } from 'drizzle-orm/mysql2/migrator'
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
@@ -11,25 +11,10 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
-});
-
-export const db = drizzle(pool, { schema, mode: 'default' });
-
-// 初始化表
-db.execute(sql`
-  CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE
-  )
-`)
-
-// 添加新列
-db.execute(sql`ALTER TABLE users ADD COLUMN age INT`).catch(err => {
-  console.log(err)
 })
 
-// 添加新列
-db.execute(sql`ALTER TABLE users ADD COLUMN balance INT`).catch(err => {
-  console.log(err)
-})
+export const db = drizzle(pool, { schema, mode: 'default' })
+
+if (process.env.NODE_ENV === 'production') {
+  migrate(db, { migrationsFolder: 'drizzle/migrations' })
+}
