@@ -1,8 +1,8 @@
 import { drizzle } from 'drizzle-orm/mysql2'
 import mysql from 'mysql2/promise'
-import * as schema from './schema'
-import 'dotenv/config'
 import { migrate } from 'drizzle-orm/mysql2/migrator'
+import 'dotenv/config'
+import * as schema from './schema'
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
@@ -16,5 +16,5 @@ const pool = mysql.createPool({
 export const db = drizzle(pool, { schema, mode: 'default' })
 
 if (process.env.NODE_ENV === 'production') {
-  migrate(db, { migrationsFolder: 'drizzle/migrations' })
+  migrate(db, { migrationsFolder: './drizzle/migrations' })
 }

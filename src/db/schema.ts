@@ -1,5 +1,5 @@
 import { mysqlTable, serial, varchar, int, text, boolean, timestamp } from 'drizzle-orm/mysql-core'
-export type Num = number
+
 const timestamps = {
   created_at: timestamp().defaultNow().notNull(),
   updated_at: timestamp().onUpdateNow(),
