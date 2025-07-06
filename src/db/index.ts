@@ -15,6 +15,6 @@ const pool = mysql.createPool({
 
 export const db = drizzle(pool, { schema, mode: 'default' })
 
-if (process.env.TESTNET !== 'true') {
+if (process.env.TESTNET !== 'true' && (!process.env.NODE_APP_INSTANCE || process.env.NODE_APP_INSTANCE === '0')) {
   migrate(db, { migrationsFolder: './drizzle/migrations' })
 }
