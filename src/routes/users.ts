@@ -1,9 +1,12 @@
 import type { Request, Response } from 'express'
-import { db } from '../db'
+import express from 'express'
 import { eq } from 'drizzle-orm'
+import { db } from '../db'
 import { users } from '../db/schema'
 
-export const createUser = async (req: Request, res: Response) => {
+const router = express.Router()
+
+router.post('/', async (req: Request, res: Response) => {
   try {
     const { name, email } = req.body
     const newUser = await db.insert(users).values({ name, email })
@@ -11,9 +14,9 @@ export const createUser = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({ error: 'Database error' })
   }
-}
+})
 
-export const getUser = async (req: Request, res: Response) => {
+router.get('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params
     const user = await db.select().from(users).where(eq(users.id, Number(id)))
@@ -27,4 +30,6 @@ export const getUser = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({ error: 'Database error' })
   }
-}
+})
+
+export default router
